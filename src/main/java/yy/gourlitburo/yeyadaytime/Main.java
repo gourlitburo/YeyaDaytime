@@ -64,6 +64,7 @@ public class Main extends JavaPlugin {
     }
 
     private void stopTask() {
+        if (task == null) return;
         if (!task.isCancelled()) {
             task.cancel();
             logger.info("Task stopped successfully.");
