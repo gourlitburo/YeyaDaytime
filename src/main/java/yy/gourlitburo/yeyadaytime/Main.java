@@ -1,10 +1,7 @@
 package yy.gourlitburo.yeyadaytime;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -21,16 +18,15 @@ public class Main extends JavaPlugin {
     Logger logger = getLogger();
 
     private List<World> worlds = new ArrayList<>();
-    private long systemBaseTime;
-    private Map<UUID, Long> worldBaseTimes = new HashMap<>();
+    private long lastSystemTime;
 
     private BukkitRunnable task;
 
     /* methods */
 
-    private int toMCTime(long milliseconds) {
+    private long toMCInterval(long milliseconds) {
         double minutes = (double)milliseconds / 1000 / 60;
-        return (int)(minutes * 24000 / 1440);
+        return Math.round(minutes * 24000 / 1440);
     }
 
     private void startTask() {
@@ -39,23 +35,19 @@ public class Main extends JavaPlugin {
                 if (task != null) task.cancel(); // otherwise we have two tasks running
             } catch (IllegalStateException e) { /* pass */ }
 
-            systemBaseTime = System.currentTimeMillis();
-            // worldBaseTimes.clear();
-            for (World world : worlds) {
-                worldBaseTimes.put(world.getUID(), world.getTime());
-            }
+            lastSystemTime = System.currentTimeMillis();
 
             task = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    // logger.info("Runnable run.");
-                    int ticksDelta = toMCTime(System.currentTimeMillis() - systemBaseTime);
+                    long currentSystemTime = System.currentTimeMillis();
+                    long ticksDelta = toMCInterval(currentSystemTime - lastSystemTime);
+                    lastSystemTime = currentSystemTime;
                     for (World world : worlds) {
                         try {
-                            long worldBaseTime = worldBaseTimes.get(world.getUID());
-                            long worldTime = worldBaseTime + ticksDelta;
+                            long worldTime = world.getTime() + ticksDelta;
                             world.setTime(worldTime);
-                            // logger.info(String.format("Time in '%s' -> %d", world.getName(), worldTime));
+                            logger.info(String.format("Time in '%s' -> %d", world.getName(), worldTime));
                         } catch (NullPointerException e) {
                             logger.warning("Failed to set world time: NullPointerException");
                         } catch (Exception e) {
@@ -98,7 +90,7 @@ public class Main extends JavaPlugin {
 
         // enable/disable
         if (config.getBoolean("enable") == true) {
-            systemBaseTime = System.currentTimeMillis();
+            lastSystemTime = System.currentTimeMillis();
             startTask();
         } else {
             stopTask();
