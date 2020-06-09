@@ -56,7 +56,7 @@ public class Main extends JavaPlugin {
                     }
                 }
             };
-            task.runTaskTimer(this, 0L, 60L * 20);
+            task.runTaskTimer(this, 0L, 50L * 20);
             logger.info("Task started successfully.");
         } catch (IllegalStateException e) {
             logger.info("Task already started.");
