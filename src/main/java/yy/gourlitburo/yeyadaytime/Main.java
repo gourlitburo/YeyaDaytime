@@ -47,7 +47,7 @@ public class Main extends JavaPlugin {
                         try {
                             long worldTime = world.getTime() + ticksDelta;
                             world.setTime(worldTime);
-                            logger.info(String.format("Time in '%s' -> %d", world.getName(), worldTime));
+                            // logger.info(String.format("Time in '%s' -> %d", world.getName(), worldTime));
                         } catch (NullPointerException e) {
                             logger.warning("Failed to set world time: NullPointerException");
                         } catch (Exception e) {
