@@ -8,7 +8,7 @@ commands:
   yeyadaytime:
     aliases: [ydt]
     description: Manage YeyaDaytime.
-    usage: "Usage: /ydt reload"
+    usage: "Usage: /ydt (reload | enable | disable)"
     permission: yeyadaytime.manage
 permissions:
   yeyadaytime.manage:
