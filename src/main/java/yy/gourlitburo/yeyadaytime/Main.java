@@ -100,6 +100,8 @@ public class Main extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (args.length == 0) return false;
+        
         String cmd = args[0];
         if (cmd.equalsIgnoreCase("reload")) {
             reloadConfig();
