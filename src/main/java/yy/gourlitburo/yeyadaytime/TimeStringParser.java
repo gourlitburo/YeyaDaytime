@@ -26,7 +26,7 @@ public class TimeStringParser {
             int min = Integer.parseInt(m.group(2));
 
             long ticks = (hr - 6) * 1000;
-            ticks += min * (16 + 2 / 3); // 16.666...
+            ticks += Math.round(min * (16 + 2f / 3)); // 16.666...
             return ticks;
         }
 
