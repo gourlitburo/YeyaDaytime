@@ -33,6 +33,7 @@ public class TimeStringParser {
         m = patTimeShort.matcher(time);
         if (m.matches()) {
             int hr = Integer.parseInt(m.group(1));
+            if (hr == 12) hr = 0;
             int period = m.group(2).equalsIgnoreCase("am") ? 0 : 1;
 
             long ticks = period == 1 ? 6000 : 0;
