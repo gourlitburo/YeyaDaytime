@@ -9,7 +9,7 @@ public class TimeStringParser {
     private static final Pattern patTimeShort = Pattern.compile("(\\d+)(am|AM|pm|PM)");
     private static final Pattern patTimeTicks = Pattern.compile("(\\d+)ticks");
 
-    public static long parse(String time) {
+    public static long parse(String time) throws IllegalArgumentException {
         Matcher m;
 
         m = patTimeNamed.matcher(time);
