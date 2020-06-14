@@ -1,6 +1,6 @@
 main: yy.gourlitburo.yeyadaytime.Main
 name: YeyaDaytime
-version: 0.0.0
+version: 0.1.0
 api-version: 1.15
 author: Zack Guard
 description: Sync world time with system time.
@@ -10,6 +10,13 @@ commands:
     description: Manage YeyaDaytime.
     usage: "Usage: /ydt (reload | enable | disable)"
     permission: yeyadaytime.manage
+  ytime:
+    aliases: [time, toki]
+    description: Set world time.
+    usage: "Usage: /ytime [day|night|dawn|17:30|4pm|4000ticks] [worldname|all]"
+    permission: yeyadaytime.time
 permissions:
   yeyadaytime.manage:
+    default: op
+  yeyadaytime.time:
     default: op
