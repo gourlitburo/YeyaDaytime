@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -27,11 +25,6 @@ public class Main extends JavaPlugin {
     private Map<UUID, Long> baseSystemTimes = new HashMap<>(4);
     private Map<UUID, Long> baseWorldTimes = new HashMap<>(4);
 
-    private final Pattern patTimeNamed = Pattern.compile("day|night|dawn");
-    private final Pattern patTimeFull = Pattern.compile("(\\d{2}):(\\d{2})");
-    private final Pattern patTimeShort = Pattern.compile("(\\d+)(am|AM|pm|PM)");
-    private final Pattern patTimeTicks = Pattern.compile("(\\d+)ticks");
-
     private BukkitRunnable task;
 
     /* methods */
@@ -39,46 +32,6 @@ public class Main extends JavaPlugin {
     private long toMCInterval(long milliseconds) {
         double minutes = (double)milliseconds / 1000 / 60;
         return Math.round(minutes * 24000 / 1440);
-    }
-
-    private long parseTimeString(String time) {
-        Matcher m;
-
-        m = patTimeNamed.matcher(time);
-        if (m.matches()) {
-            String name = m.group(0);
-            if (name.equals("day")) return 1000;
-            if (name.equals("night")) return 13000;
-            if (name.equals("dawn")) return 23000; // BE's /time set sunrise
-        }
-
-        m = patTimeFull.matcher(time);
-        if (m.matches()) {
-            int hr = Integer.parseInt(m.group(1));
-            int min = Integer.parseInt(m.group(2));
-
-            long ticks = (hr - 6) * 1000;
-            ticks += min * (16 + 2 / 3); // 16.666...
-            return ticks;
-        }
-
-        m = patTimeShort.matcher(time);
-        if (m.matches()) {
-            int hr = Integer.parseInt(m.group(1));
-            int period = m.group(2).equalsIgnoreCase("am") ? 0 : 1;
-
-            long ticks = period == 1 ? 6000 : 0;
-            ticks += (hr - 6) * 1000;
-            return ticks;
-        }
-
-        m = patTimeTicks.matcher(time);
-        if (m.matches()) {
-            long ticks = Integer.parseInt(m.group(1));
-            return ticks;
-        }
-
-        throw new IllegalArgumentException("Invalid time string.");
     }
 
     private void startTask() {
@@ -209,7 +162,7 @@ public class Main extends JavaPlugin {
             } else {
                 long ticks;
                 try {
-                    ticks = parseTimeString(args[0]);
+                    ticks = TimeStringParser.parse(args[0]);
                 } catch (IllegalArgumentException e) {
                     return false;
                 }
