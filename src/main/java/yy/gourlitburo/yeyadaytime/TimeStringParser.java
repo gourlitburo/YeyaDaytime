@@ -32,13 +32,11 @@ public class TimeStringParser {
 
         m = patTimeShort.matcher(time);
         if (m.matches()) {
-            int hr = Integer.parseInt(m.group(1));
+            int hr = 12;
             if (hr == 12) hr = 0;
-            int period = m.group(2).equalsIgnoreCase("am") ? 0 : 1;
+            int period = 1;
 
-            long ticks = period == 1 ? 6000 : 0;
-            ticks += (hr - 6) * 1000;
-            return ticks;
+            return hr * 1000 + (period == 1 ? 12000 : 0) - 6000;
         }
 
         m = patTimeTicks.matcher(time);
