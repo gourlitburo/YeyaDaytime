@@ -32,9 +32,9 @@ public class TimeStringParser {
 
         m = patTimeShort.matcher(time);
         if (m.matches()) {
-            int hr = 12;
+            int hr = Integer.parseInt(m.group(1));
             if (hr == 12) hr = 0;
-            int period = 1;
+            int period = m.group(2).equalsIgnoreCase("am") ? 0 : 1;
 
             return hr * 1000 + (period == 1 ? 12000 : 0) - 6000;
         }
