@@ -15,13 +15,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.world.TimeSkipEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class Main extends JavaPlugin implements Listener {
+public class Main extends JavaPlugin {
     /* fields */
 
     Logger logger = getLogger();
@@ -110,7 +107,7 @@ public class Main extends JavaPlugin implements Listener {
                             long ticksDelta = toMCInterval(currentSystemTime - baseSystemTimes.get(id));
                             long worldTime = baseWorldTimes.get(id) + ticksDelta;
                             world.setTime(worldTime);
-                            logger.info(String.format("Time in '%s' -> %d", world.getName(), worldTime));
+                            // logger.info(String.format("Time in '%s' -> %d", world.getName(), worldTime));
                         } catch (NullPointerException e) {
                             logger.warning("Failed to set world time: NullPointerException");
                         } catch (Exception e) {
@@ -119,8 +116,8 @@ public class Main extends JavaPlugin implements Listener {
                     }
                 }
             };
-            // task.runTaskTimer(this, 0L, 50L * 20);
-            task.runTaskTimer(this, 0L, 10L * 20);
+            task.runTaskTimer(this, 0L, 25L * 20);
+            // task.runTaskTimer(this, 0L, 10L * 20);
             logger.info("Task started successfully.");
         } catch (IllegalStateException e) {
             logger.info("Task already started.");
@@ -177,14 +174,6 @@ public class Main extends JavaPlugin implements Listener {
         } else {
             stopTask();
         }
-    }
-
-    @EventHandler
-    public void onTimeSkipEvent(TimeSkipEvent event) {
-        long skipAmount = event.getSkipAmount();
-        TimeSkipEvent.SkipReason skipReason = event.getSkipReason();
-
-        logger.info(String.format("TimeSkipEvent: skipAmount = %d ; skipReason = %s", skipAmount, skipReason.name()));
     }
 
     @Override
@@ -258,8 +247,6 @@ public class Main extends JavaPlugin implements Listener {
         saveDefaultConfig();
 
         configChanged();
-
-        Bukkit.getPluginManager().registerEvents(this, this);
 
         logger.info("YeyaDaytime ready.");
     }
